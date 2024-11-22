@@ -37,8 +37,15 @@ static int addr = 0x68;
 static void mpu6050_reset() {
     // Two byte reset. First byte register, second byte data
     // There are a load more options to set up the device in different ways that could be added here
-    uint8_t buf[] = {0x6B, 0x80};
+    uint8_t buf[] = {0x6B, 0x80}; // the MPU6050 will enter a sleep mode 
+    i2c_write_blocking(i2c_default, addr, buf, 2, false); 
+    uint8_t buf[] = {0x6B, 0x00};  // Clear sleep mode and start sending data 
     i2c_write_blocking(i2c_default, addr, buf, 2, false);
+   sleep_ms(10); // Allow stabilization
+
+
+
+   
 }
 
 static void mpu6050_read_raw(int16_t accel[3], int16_t gyro[3], int16_t *temp) {
